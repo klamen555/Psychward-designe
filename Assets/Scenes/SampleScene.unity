@@ -1867,6 +1867,9 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1217869063}
   m_Mesh: {fileID: 8148188476708289613, guid: ed893d5bc58ee3b35b8f070b96ff1c62, type: 3}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 --- !u!1001 &1310507328
 PrefabInstance:
