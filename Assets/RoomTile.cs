@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,99 +12,115 @@ public class RoomTile : MonoBehaviour
     [Header("Grid")]
     [SerializeField] private float gridSize = 1f;
 
+    // Evidence vöech budov podle jejich pozice.
+    private static readonly HashSet<Vector2Int> occupiedCells =
+        new HashSet<Vector2Int>();
+
+    // Evidence pouze chodeb, jejichû zdi aktualizujeme.
+    private static readonly HashSet<RoomTile> hallways =
+        new HashSet<RoomTile>();
+
     private Vector2Int cell;
+    private bool isPreview;
+    private bool isRegistered;
 
-    private static Dictionary<Vector2Int, RoomTile> rooms =
-        new Dictionary<Vector2Int, RoomTile>();
-
-    private static readonly Vector2Int right =
-        new Vector2Int(1, 0);
-
-    private static readonly Vector2Int left =
-        new Vector2Int(-1, 0);
-
-    private static readonly Vector2Int forward =
-        new Vector2Int(0, 1);
-
-    private static readonly Vector2Int back =
-        new Vector2Int(0, -1);
-
-    private void OnEnable()
+    public void SetPreviewMode(bool value)
     {
-        RegisterRoom();
+        isPreview = value;
     }
 
     private void Start()
     {
-        RefreshAllRooms();
-    }
-
-    private void OnDisable()
-    {
-        // OdstranÌme mÌstnost z registru,
-        // pouze pokud tam st·le pat¯Ì tento objekt.
-        if (rooms.TryGetValue(cell, out RoomTile room)
-            && room == this)
-        {
-            rooms.Remove(cell);
-        }
-
-        RefreshAllRooms();
-    }
-
-    private void RegisterRoom()
-    {
-        cell = new Vector2Int(
-            Mathf.RoundToInt(transform.position.x / gridSize),
-            Mathf.RoundToInt(transform.position.z / gridSize)
-        );
-
-        if (rooms.TryGetValue(cell, out RoomTile existing)
-            && existing != null && existing != this)
-        {
-            Debug.LogWarning(
-                "Na polÌËku " + cell +
-                " uû je zaregistrovan· jin· mÌstnost!", this
-            );
+        if (isPreview)
             return;
-        }
 
-        rooms[cell] = this;
-        RefreshAllRooms();
+        cell = GetCell(transform.position);
+
+        // Registrujeme tuto chodbu.
+        hallways.Add(this);
+        occupiedCells.Add(cell);
+        isRegistered = true;
+
+        RefreshAllHallways();
     }
 
-    private void RefreshAllRooms()
+    private void OnDestroy()
     {
-        // Aktualizujeme stÏny vöech existujÌcÌch mÌstnostÌ.
-        foreach (RoomTile room in rooms.Values)
+        if (isPreview || !isRegistered)
+            return;
+
+        hallways.Remove(this);
+        occupiedCells.Remove(cell);
+
+        RefreshAllHallways();
+    }
+
+    // Vol· BuildingSystem po postavenÌ jakÈkoliv budovy.
+    public static void NotifyBuildingPlaced(Vector3 position, float size = 1f)
+    {
+        Vector2Int placedCell = GetCellStatic(position, size);
+
+        occupiedCells.Add(placedCell);
+
+        RefreshAllHallways();
+    }
+
+    private Vector2Int GetCell(Vector3 position)
+    {
+        return GetCellStatic(position, gridSize);
+    }
+
+    private static Vector2Int GetCellStatic(Vector3 position, float size)
+    {
+        return new Vector2Int(
+            Mathf.RoundToInt(position.x / size),
+            Mathf.RoundToInt(position.z / size)
+        );
+    }
+
+    private static void RefreshAllHallways()
+    {
+        foreach (RoomTile hallway in hallways)
         {
-            if (room != null)
-                room.UpdateWalls();
+            if (hallway != null)
+                hallway.UpdateWalls();
         }
     }
 
     private void UpdateWalls()
     {
-        SetWall(wallPosX, !HasRoom(right));
-        SetWall(wallNegX, !HasRoom(left));
-        SetWall(wallPosZ, !HasRoom(forward));
-        SetWall(wallNegZ, !HasRoom(back));
+        // Zjiöùujeme svÏtovÈ smÏry podle aktu·lnÌ rotace chodby.
+        Vector2Int right = GetWorldDirection(Vector3.right);
+        Vector2Int left = GetWorldDirection(Vector3.left);
+        Vector2Int forward = GetWorldDirection(Vector3.forward);
+        Vector2Int back = GetWorldDirection(Vector3.back);
+
+        SetWall(wallPosX, !HasBuilding(right));
+        SetWall(wallNegX, !HasBuilding(left));
+        SetWall(wallPosZ, !HasBuilding(forward));
+        SetWall(wallNegZ, !HasBuilding(back));
     }
 
-    private bool HasRoom(Vector2Int direction)
+    private Vector2Int GetWorldDirection(Vector3 localDirection)
+    {
+        Vector3 direction = transform.TransformDirection(localDirection);
+
+        return new Vector2Int(
+            Mathf.RoundToInt(direction.x),
+            Mathf.RoundToInt(direction.z)
+        );
+    }
+
+    private bool HasBuilding(Vector2Int direction)
     {
         Vector2Int neighborCell = cell + direction;
 
-        return rooms.TryGetValue(
-            neighborCell, out RoomTile neighbor
-        ) && neighbor != null && neighbor != this;
+        return occupiedCells.Contains(neighborCell);
     }
 
     private void SetWall(GameObject wall, bool visible)
     {
         if (wall != null && wall.activeSelf != visible)
-        {
             wall.SetActive(visible);
-        }
     }
 }

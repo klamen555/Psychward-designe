@@ -26,6 +26,12 @@ public class BuildingSystem : MonoBehaviour
         if (!isBuilding)
             return;
 
+        // Otoèení místnosti o 90 stupòù
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            preview.transform.Rotate(0f, 90f, 0f);
+        }
+
         UpdatePreview();
 
         // Levé tlaèítko myši postaví budovu
@@ -63,6 +69,8 @@ public class BuildingSystem : MonoBehaviour
 
     void StartBuilding()
     {
+
+
         if (buildingPrefab == null)
         {
             Debug.LogWarning("Není vybrán žádný prefab budovy!");
@@ -124,12 +132,9 @@ public class BuildingSystem : MonoBehaviour
 
     void PlaceBuilding()
     {
-        Ray ray = Camera.main.ScreenPointToRay(
-            Input.mousePosition
-        );
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit,
-            100f, groundLayer))
+        if (!Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
             return;
 
         Vector2Int cell = GetCell(hit.point);
@@ -143,13 +148,17 @@ public class BuildingSystem : MonoBehaviour
             cell.y * gridSize
         );
 
-        Instantiate(
+        GameObject placedBuilding = Instantiate(
             buildingPrefab,
             position,
-            Quaternion.identity
+            preview.transform.rotation
         );
 
+        // Zaznamenáme každou budovu, nejen chodbu.
         occupiedCells.Add(cell);
+
+        // Aktualizujeme zdi všech existujících chodeb.
+        RoomTile.NotifyBuildingPlaced(placedBuilding.transform.position, gridSize);
     }
 
     void SetPreviewColor(Color color)
