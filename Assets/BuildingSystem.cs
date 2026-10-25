@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class BuildingSystem : MonoBehaviour
 {
     public GameObject buildingPrefab;
     public LayerMask groundLayer;
+    public static event Action<GameObject> OnBuildingPlaced;
 
     private GameObject preview;
     private bool isBuilding = false;
@@ -153,6 +155,8 @@ public class BuildingSystem : MonoBehaviour
             position,
             preview.transform.rotation
         );
+
+        OnBuildingPlaced?.Invoke(placedBuilding);
 
         // Zaznamenáme každou budovu, nejen chodbu.
         occupiedCells.Add(cell);
