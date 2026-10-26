@@ -7,22 +7,7 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Fabric1
-    second: {fileID: 2100000, guid: bf0bd1f86232b878ca1a705372e613b3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Metal1
-    second: {fileID: 2100000, guid: 271055f31395d56c6a2009374e4b9f17, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Metal1.001
-    second: {fileID: 2100000, guid: 9c5ed9ae7cdc9d83caac53baa040f5a4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Metal1.002
     second: {fileID: 2100000, guid: 271055f31395d56c6a2009374e4b9f17, type: 2}
   - first:
       type: UnityEngine:Material
