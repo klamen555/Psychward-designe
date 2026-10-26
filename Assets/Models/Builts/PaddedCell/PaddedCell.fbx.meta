@@ -7,8 +7,33 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Carpet1
+    second: {fileID: 2100000, guid: 813c73161eb53846abc0af7b84264110, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fabric1.002
+    second: {fileID: 2100000, guid: bf0bd1f86232b878ca1a705372e613b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Metal1.006
     second: {fileID: 2100000, guid: 271055f31395d56c6a2009374e4b9f17, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal1.008
+    second: {fileID: 2100000, guid: 9c5ed9ae7cdc9d83caac53baa040f5a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal1.013
+    second: {fileID: 2100000, guid: 9c5ed9ae7cdc9d83caac53baa040f5a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PillarMat
+    second: {fileID: 2100000, guid: 6ab231fbcaa2d78fe95e6025ef6b32a5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
