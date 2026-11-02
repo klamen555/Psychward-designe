@@ -158,6 +158,10 @@ public class BuildingSystem : MonoBehaviour
 
         OnBuildingPlaced?.Invoke(placedBuilding);
 
+        if (TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.NotifyBuildingPlaced(buildingPrefab);
+        }
         // Zaznamenáme každou budovu, nejen chodbu.
         occupiedCells.Add(cell);
 
