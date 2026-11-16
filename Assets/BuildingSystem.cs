@@ -21,11 +21,6 @@ public class BuildingSystem : MonoBehaviour
 
     void Update()
     {
-        // B zapne stavìní
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            StartBuilding();
-        }
 
         if (!isBuilding)
             return;
@@ -159,6 +154,10 @@ public class BuildingSystem : MonoBehaviour
             position,
             preview.transform.rotation
         );
+
+        FindFirstObjectByType<PlSpawnManager>().RegisterBuilding(placedBuilding);
+
+
 
         //lowk vybecoded ale ja jsem chill like that, ale jakoze hleda to tu sipku yk
         Transform[] children = placedBuilding.GetComponentsInChildren<Transform>(true);

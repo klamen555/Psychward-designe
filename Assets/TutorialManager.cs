@@ -116,7 +116,7 @@ public class TutorialManager : MonoBehaviour
             dialogueText.text = step.instruction;
 
         if (characterName != null)
-            characterName.text = "Prùvodce";
+            characterName.text = "Warden";
 
         if (characterImage != null)
         {
