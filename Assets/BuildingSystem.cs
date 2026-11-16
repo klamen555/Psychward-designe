@@ -17,6 +17,8 @@ public class BuildingSystem : MonoBehaviour
 
     private float gridSize = 1f;
 
+
+
     void Update()
     {
         // B zapne stavìní
@@ -132,7 +134,7 @@ public class BuildingSystem : MonoBehaviour
     }
 
 
-    void PlaceBuilding()
+    public void PlaceBuilding()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -140,6 +142,8 @@ public class BuildingSystem : MonoBehaviour
             return;
 
         Vector2Int cell = GetCell(hit.point);
+
+
 
         if (!CanBuild(cell))
             return;
@@ -156,6 +160,19 @@ public class BuildingSystem : MonoBehaviour
             preview.transform.rotation
         );
 
+        //lowk vybecoded ale ja jsem chill like that, ale jakoze hleda to tu sipku yk
+        Transform[] children = placedBuilding.GetComponentsInChildren<Transform>(true);
+
+        foreach (Transform child in children)
+        {
+            if (child.name == "Arrow")
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+
+
         OnBuildingPlaced?.Invoke(placedBuilding);
 
         if (TutorialManager.Instance != null)
@@ -165,8 +182,9 @@ public class BuildingSystem : MonoBehaviour
         // Zaznamenáme každou budovu, nejen chodbu.
         occupiedCells.Add(cell);
 
-        // Aktualizujeme zdi všech existujících chodeb.
-        RoomTile.NotifyBuildingPlaced(placedBuilding.transform.position, gridSize);
+
+
+        
     }
 
     void SetPreviewColor(Color color)
